@@ -6,7 +6,7 @@ public class File extends FinderItem {
     private String uuid;
     private String localPath;
 
-    public File(String path, String dateEdited, boolean online, String uuid, String localPath){
+    public File(String path, String dateEdited, boolean online, String uuid){
         super(path);
         this.dateEdited = dateEdited;
         this.online = online;

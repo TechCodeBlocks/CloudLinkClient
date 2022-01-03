@@ -12,6 +12,7 @@ public class FinderItem {
         this.path = path;
         parents = new ArrayList<String>();
         parents = Arrays.asList(path.split("/"));
+        parents = parents.subList(0, parents.size()-1);
     }
 
     public String getPath() {

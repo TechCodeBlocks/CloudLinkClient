@@ -1,5 +1,7 @@
 package cloudlink;
 
+import cloudlink.utility.JSONReader;
+import cloudlink.utility.TreeBuilder;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +20,8 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+        TreeBuilder treeBuilder = new TreeBuilder(JSONReader.read());
+        treeBuilder.testConversion();
+        //launch(args);
     }
 }
