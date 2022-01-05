@@ -15,7 +15,7 @@ public class TreeBuilder {
     * Class stub, yet to be written.*/
     private ArrayList<File> filesList = new ArrayList<>();
     private ArrayList<Folder> foldersList = new ArrayList<>();
-    FinderItem root;
+    HashMap<Integer, HashMap<String, FinderItem>> tree = new HashMap<>();
     List<HashMap<String, String>> filesData;
 
     public TreeBuilder(List<HashMap<String,String>> filesData){
@@ -53,18 +53,23 @@ public class TreeBuilder {
     private void sortFiles(){
         Collections.sort(filesList, new FinderItemComparator());
     }
+
     private void createFoldersList(){
         ArrayList<String> seenFolders = new ArrayList<>();
         for(File file : filesList){
             String folderPath = "";
-            if(file.getParents().size() == 1){
 
-            }
             for(int i=0; i<file.getParents().size()-1;i++){
                 folderPath += file.getParents().get(i) + "/";
-                foldersList.add(new Folder(folderPath));
+
 
             }
+            if(!seenFolders.contains(folderPath)) {
+                foldersList.add(new Folder(folderPath));
+                seenFolders.add(folderPath);
+
+            }
+
         }
 
     }
@@ -73,14 +78,12 @@ public class TreeBuilder {
         ArrayList<String> seenFolders = new ArrayList<>();
         sortFiles();
         for(File file : filesList){
-            List<String> inversePath = file.getParents().subList(file.getParents().size(), 0);
-            for(int i = 0; i<inversePath.size();i++){
-                Folder folder = new Folder(file.getPath());
-                if(!seenFolders.contains(inversePath.get(i))){
-                    seenFolders.add(inversePath.get(i));
-
-
-                }
+            int depth = file.getParents().size();
+            if(tree.containsKey(depth)){
+                tree.get(depth).put(file.getDirectParent(), file);
+            }else{
+                tree.put(depth, new HashMap<>());
+                tree.get(depth).put(file.getDirectParent(), file);
             }
         }
 

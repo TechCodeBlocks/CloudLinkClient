@@ -1,9 +1,10 @@
 package cloudlink.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FileTree {
-    ArrayList<FinderItem> tree;
+    HashMap<Integer, HashMap<String, FinderItem>> tree;
     /*
     * Class stub*/
 }

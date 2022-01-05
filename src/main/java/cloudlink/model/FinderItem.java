@@ -8,7 +8,7 @@ import java.util.List;
 public class FinderItem {
     private String path;
     private List<String> parents;
-    private FinderItem directParent;
+    private String directParent;
     private ArrayList<FinderItem> children;
 
     public FinderItem(String path){
@@ -16,6 +16,7 @@ public class FinderItem {
         parents = new ArrayList<String>();
         parents = Arrays.asList(path.split("/"));
         parents = parents.subList(0, parents.size()-1);
+        directParent = parents.get(parents.size());
 
     }
 
@@ -35,11 +36,11 @@ public class FinderItem {
         this.parents = parents;
     }
 
-    public FinderItem getDirectParent() {
+    public String getDirectParent() {
         return directParent;
     }
 
-    public void setDirectParent(FinderItem directParent) {
+    public void setDirectParent(String directParent) {
         this.directParent = directParent;
     }
 
