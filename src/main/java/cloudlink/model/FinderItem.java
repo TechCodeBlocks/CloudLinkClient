@@ -16,7 +16,7 @@ public class FinderItem {
         parents = new ArrayList<String>();
         parents = Arrays.asList(path.split("/"));
         parents = parents.subList(0, parents.size()-1);
-        directParent = parents.get(parents.size());
+        directParent = parents.get(parents.size()-1);
 
     }
 

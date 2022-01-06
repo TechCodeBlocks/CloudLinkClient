@@ -3,6 +3,7 @@ package cloudlink.utility;
 import cloudlink.model.File;
 import cloudlink.model.FinderItem;
 import cloudlink.model.Folder;
+import com.fasterxml.jackson.databind.util.TypeKey;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -54,17 +55,17 @@ public class TreeBuilder {
         Collections.sort(filesList, new FinderItemComparator());
     }
 
-    private void createFoldersList(){
+    public void createFoldersList(){
         ArrayList<String> seenFolders = new ArrayList<>();
         for(File file : filesList){
             String folderPath = "";
-
+            if(!seenFolders.contains(folderPath)) {
             for(int i=0; i<file.getParents().size()-1;i++){
                 folderPath += file.getParents().get(i) + "/";
 
 
             }
-            if(!seenFolders.contains(folderPath)) {
+
                 foldersList.add(new Folder(folderPath));
                 seenFolders.add(folderPath);
 
@@ -74,9 +75,9 @@ public class TreeBuilder {
 
     }
 
-    private void buildTree(){
+    public void buildTree(){
         ArrayList<String> seenFolders = new ArrayList<>();
-        sortFiles();
+       // sortFiles();
         for(File file : filesList){
             int depth = file.getParents().size();
             if(tree.containsKey(depth)){
@@ -88,6 +89,15 @@ public class TreeBuilder {
         }
 
 
+    }
+    public void printTree(){
+        for(Integer key1 :tree.keySet() ){
+            System.out.println(key1 + " {");
+            for(String key2: tree.get(key1).keySet() ){
+                System.out.println(key2 + " : " + tree.get(key1).get(key2));
+            }
+            System.out.println("}");
+        }
     }
     //Do in layers by length of parents, group by lengths to have depth into 'tree' - 3 dimensional data structure
     //Then to traverse, go by depth into tree and extract by checking preceding parent item for if it matches the
