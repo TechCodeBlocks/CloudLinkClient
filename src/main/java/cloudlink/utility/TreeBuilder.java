@@ -16,7 +16,7 @@ public class TreeBuilder {
     * Class stub, yet to be written.*/
     private ArrayList<File> filesList = new ArrayList<>();
     private ArrayList<Folder> foldersList = new ArrayList<>();
-    HashMap<Integer, HashMap<String, FinderItem>> tree = new HashMap<>();
+    HashMap<Integer, HashMap<String, List<FinderItem>>> tree = new HashMap<>();
     List<HashMap<String, String>> filesData;
 
     public TreeBuilder(List<HashMap<String,String>> filesData){
@@ -82,10 +82,15 @@ public class TreeBuilder {
         for(File file : filesList){
             int depth = file.getParents().size();
             if(tree.containsKey(depth)){
-                tree.get(depth).put(file.getDirectParent(), file);
+                if(tree.get(depth).get(file.getDirectParent()) != null){
+                    tree.get(depth).get(file.getDirectParent()).add(file);
+                }
+                tree.get(depth).put(file.getDirectParent(), new ArrayList<>());
+                tree.get(depth).get(file.getDirectParent()).add(file);
             }else{
                 tree.put(depth, new HashMap<>());
-                tree.get(depth).put(file.getDirectParent(), file);
+                tree.get(depth).put(file.getDirectParent(), new ArrayList<>());
+                tree.get(depth).get(file.getDirectParent()).add(file);
             }
         }
         System.out.println("Adding Folders");
@@ -93,11 +98,15 @@ public class TreeBuilder {
 
             int depth = folder.getParents().size();
             if(tree.containsKey(depth)){
-                tree.get(depth).put(folder.getDirectParent(), folder);
-                System.out.println(folder.getPath());
+                if(tree.get(depth).get(folder.getDirectParent()) != null){
+                    tree.get(depth).get(folder.getDirectParent()).add(folder);
+                }
+                tree.get(depth).put(folder.getDirectParent(), new ArrayList<>());
+                tree.get(depth).get(folder.getDirectParent()).add(folder);
             }else{
                 tree.put(depth, new HashMap<>());
-                tree.get(depth).put(folder.getDirectParent(), folder);
+                tree.get(depth).put(folder.getDirectParent(), new ArrayList<>());
+                tree.get(depth).get(folder.getDirectParent()).add(folder);
             }
         }
 
@@ -107,7 +116,13 @@ public class TreeBuilder {
         for(Integer key1 :tree.keySet() ){
             System.out.println(key1 + " {");
             for(String key2: tree.get(key1).keySet() ){
-                System.out.println(key2 + " : " + tree.get(key1).get(key2).getPath());
+                System.out.println(tree.get(key1).get(key2).size());
+                System.out.println(key2 +" {");
+                for(FinderItem item :tree.get(key1).get(key2)){
+                    System.out.println(item.getPath());
+                }
+                System.out.println("}");
+
             }
             System.out.println("}");
         }
