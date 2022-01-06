@@ -59,13 +59,14 @@ public class TreeBuilder {
         ArrayList<String> seenFolders = new ArrayList<>();
         for(File file : filesList){
             String folderPath = "";
-            if(!seenFolders.contains(folderPath)) {
-            for(int i=0; i<file.getParents().size()-1;i++){
+
+            for(int i=0; i<file.getParents().size();i++){
                 folderPath += file.getParents().get(i) + "/";
 
 
             }
-
+            if(!seenFolders.contains(folderPath)) {
+                System.out.println(folderPath);
                 foldersList.add(new Folder(folderPath));
                 seenFolders.add(folderPath);
 
@@ -87,6 +88,18 @@ public class TreeBuilder {
                 tree.get(depth).put(file.getDirectParent(), file);
             }
         }
+        System.out.println("Adding Folders");
+        for(Folder folder: foldersList){
+
+            int depth = folder.getParents().size();
+            if(tree.containsKey(depth)){
+                tree.get(depth).put(folder.getDirectParent(), folder);
+                System.out.println(folder.getPath());
+            }else{
+                tree.put(depth, new HashMap<>());
+                tree.get(depth).put(folder.getDirectParent(), folder);
+            }
+        }
 
 
     }
@@ -94,7 +107,7 @@ public class TreeBuilder {
         for(Integer key1 :tree.keySet() ){
             System.out.println(key1 + " {");
             for(String key2: tree.get(key1).keySet() ){
-                System.out.println(key2 + " : " + tree.get(key1).get(key2));
+                System.out.println(key2 + " : " + tree.get(key1).get(key2).getPath());
             }
             System.out.println("}");
         }
