@@ -1,6 +1,7 @@
 package cloudlink.utility;
 
 import cloudlink.model.File;
+import cloudlink.model.FileTree;
 import cloudlink.model.FinderItem;
 import cloudlink.model.Folder;
 import com.fasterxml.jackson.databind.util.TypeKey;
@@ -76,7 +77,7 @@ public class TreeBuilder {
 
     }
 
-    public void buildTree(){
+    public FileTree buildTree(){
         ArrayList<String> seenFolders = new ArrayList<>();
        // sortFiles();
         for(File file : filesList){
@@ -84,9 +85,10 @@ public class TreeBuilder {
             if(tree.containsKey(depth)){
                 if(tree.get(depth).get(file.getDirectParent()) != null){
                     tree.get(depth).get(file.getDirectParent()).add(file);
+                }else {
+                    tree.get(depth).put(file.getDirectParent(), new ArrayList<>());
+                    tree.get(depth).get(file.getDirectParent()).add(file);
                 }
-                tree.get(depth).put(file.getDirectParent(), new ArrayList<>());
-                tree.get(depth).get(file.getDirectParent()).add(file);
             }else{
                 tree.put(depth, new HashMap<>());
                 tree.get(depth).put(file.getDirectParent(), new ArrayList<>());
@@ -100,15 +102,18 @@ public class TreeBuilder {
             if(tree.containsKey(depth)){
                 if(tree.get(depth).get(folder.getDirectParent()) != null){
                     tree.get(depth).get(folder.getDirectParent()).add(folder);
-                }
+                }else {
                 tree.get(depth).put(folder.getDirectParent(), new ArrayList<>());
                 tree.get(depth).get(folder.getDirectParent()).add(folder);
+                }
             }else{
+
                 tree.put(depth, new HashMap<>());
                 tree.get(depth).put(folder.getDirectParent(), new ArrayList<>());
                 tree.get(depth).get(folder.getDirectParent()).add(folder);
             }
         }
+        return new FileTree(tree);
 
 
     }
@@ -116,7 +121,6 @@ public class TreeBuilder {
         for(Integer key1 :tree.keySet() ){
             System.out.println(key1 + " {");
             for(String key2: tree.get(key1).keySet() ){
-                System.out.println(tree.get(key1).get(key2).size());
                 System.out.println(key2 +" {");
                 for(FinderItem item :tree.get(key1).get(key2)){
                     System.out.println(item.getPath());
@@ -135,5 +139,5 @@ public class TreeBuilder {
     //Then provide the logic to traverse it.
     //Building the structure would be: get possible depths, for each one create a hash map of preceding and file item.
     //Check if depth exists, go to add, check if preceding exists, go to add. Use a ,merged list of folder and file items.
-
+    //Traversal: take selected depth and use selected preceding page as key to extract results.
 }

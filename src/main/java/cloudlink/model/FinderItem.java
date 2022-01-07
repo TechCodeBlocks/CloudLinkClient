@@ -9,14 +9,16 @@ public class FinderItem {
     private String path;
     private List<String> parents;
     private String directParent;
-    private ArrayList<FinderItem> children;
+    private String name;
 
     public FinderItem(String path){
         this.path = path;
         parents = new ArrayList<String>();
         parents = Arrays.asList(path.split("/"));
-        parents = parents.subList(0, parents.size()-1);
+        name = parents.get(parents.size()-1);
+        parents = parents.subList(1, parents.size()-1);
         directParent = parents.get(parents.size()-1);
+
 
     }
 
