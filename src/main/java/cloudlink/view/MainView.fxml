@@ -1,14 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="cloudlink.view.MainViewController"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloudlink.view.MainViewController">
+   <children>
+      <TabPane layoutX="8.0" layoutY="14.0" prefHeight="379.0" prefWidth="587.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+        <tabs>
+          <Tab text="Remote">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.6" layoutX="153.0" layoutY="58.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <TableView fx:id="remoteFiles" layoutX="73.0" layoutY="66.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                      <columns>
+                                        <TableColumn fx:id="remoteFilesFname" minWidth="75.0" prefWidth="120.0" text="File Name" />
+                                        <TableColumn fx:id="remoteFilesFdateEdited" minWidth="75.0" prefWidth="130.0" text="Date Edited" />
+                                          <TableColumn fx:id="remoteFilesFtracked" minWidth="75.0" prefWidth="75.0" text="Tracked" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="329.0" prefWidth="242.0">
+                                 <children>
+                                    <GridPane layoutX="-25.0" layoutY="25.0" maxHeight="-Infinity" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label fx:id="remoteFileNameLabel" text="Label" />
+                                          <Label fx:id="remoteFileName" text="Label" GridPane.columnIndex="1" />
+                                          <Label fx:id="remoteFileSyncLabel" text="Label" GridPane.rowIndex="1" />
+                                          <Label fx:id="remoteFileSync" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label fx:id="remoteFileOwnerLabel" text="Label" GridPane.rowIndex="2" />
+                                          <Label fx:id="remoteFileOwner" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                       </children>
+                                    </GridPane>
+                                    <ButtonBar layoutX="15.0" layoutY="155.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="154.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0">
+                                      <buttons>
+                                        <Button fx:id="remoteFileBackwardBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="128.0" text="&lt;" />
+                                          <Button fx:id="remoteFileForwardBtn" mnemonicParsing="false" text="&gt;" />
+                                      </buttons>
+                                    </ButtonBar>
+                                    <Button fx:id="remoteFileDownloadBtn" layoutX="36.0" layoutY="209.0" mnemonicParsing="false" text="Download" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="209.0" />
+                                    <Button fx:id="remoteFileUpdateBtn" layoutX="144.0" layoutY="209.0" mnemonicParsing="false" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="209.0" />
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Local">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <SplitPane dividerPositions="0.6" layoutX="153.0" layoutY="58.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+                           <items>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <TableView fx:id="localFiles" layoutX="73.0" layoutY="66.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                       <columns>
+                                          <TableColumn fx:id="localFilesFname" minWidth="75.0" prefWidth="120.0" text="File Name" />
+                                          <TableColumn fx:id="localFilesFdateEdited" minWidth="75.0" prefWidth="130.0" text="Date Edited" />
+                                          <TableColumn fx:id="localFilesFtracked" minWidth="75.0" prefWidth="75.0" text="Tracked" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="329.0" prefWidth="242.0">
+                                 <children>
+                                    <GridPane layoutX="-25.0" layoutY="25.0" maxHeight="-Infinity" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label fx:id="localFileNameLabel" text="Label" />
+                                          <Label fx:id="localFileName" text="Label" GridPane.columnIndex="1" />
+                                          <Label fx:id="localFileSyncLabel" text="Label" GridPane.rowIndex="1" />
+                                          <Label fx:id="localFileSync" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label fx:id="localFileOwnerLabel" text="Label" GridPane.rowIndex="2" />
+                                          <Label fx:id="localFileOwner" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                       </children>
+                                    </GridPane>
+                                    <ButtonBar layoutX="15.0" layoutY="155.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="154.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0">
+                                       <buttons>
+                                          <Button fx:id="localFileBackwardBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="128.0" text="&lt;" />
+                                          <Button fx:id="localFileForwardBtn" mnemonicParsing="false" text="&gt;" />
+                                       </buttons>
+                                    </ButtonBar>
+                                    <Button fx:id="localFileUploadBtn" layoutX="36.0" layoutY="209.0" mnemonicParsing="false" text="Upload" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="209.0" />
+                                    <Button fx:id="localFileUpdateBtn" layoutX="144.0" layoutY="209.0" mnemonicParsing="false" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="209.0" />
+                                 </children>
+                              </AnchorPane>
+                           </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+               </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
 </AnchorPane>

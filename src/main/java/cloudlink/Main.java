@@ -12,6 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Main extends Application {
+    //On start: pull the latest version of file list from cloud version.
+    //Check for all online files, log these. Do the same with the local file list, for any local files are logged as online
+    //check it's uuid to find online copy, compare date-edited values to work out whether synchronisation is required.
+    //local files will be logged with less information by default, once added to system other information will be generated
+    //should be building a merged list where files are updated with their local paths if they are tracked.
 
     @Override
     public void start(Stage primaryStage) throws Exception{
