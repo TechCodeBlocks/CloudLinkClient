@@ -5,6 +5,7 @@ public class File extends FinderItem {
     private boolean online;
     private String uuid;
     private String localPath;
+    private Sychnronosity status;
 
     public File(String path, String dateEdited, boolean online, String uuid){
         super(path);
@@ -12,6 +13,7 @@ public class File extends FinderItem {
         this.online = online;
         this.uuid = uuid;
         localPath = null;
+        status = Sychnronosity.NOT_TRAKCED;
 
     }
 
@@ -45,5 +47,13 @@ public class File extends FinderItem {
 
     public void setLocalPath(String localPath) {
         this.localPath = localPath;
+    }
+
+    public Sychnronosity getStatus() {
+        return status;
+    }
+
+    public void setStatus(Sychnronosity status) {
+        this.status = status;
     }
 }
