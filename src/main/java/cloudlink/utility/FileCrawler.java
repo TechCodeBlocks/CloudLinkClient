@@ -15,12 +15,12 @@ public class FileCrawler {
         this.baseFilePath = baseFilePath;
     }
 
-    public List<HashMap<String,String>> crawl(List<HashMap<String,String>> existingFiles){
-        existingFilePaths = getPathsFromList(existingFiles);
+    public List<HashMap<String,String>> crawl(){
+        existingFilePaths = getPathsFromList(GlobalValues.trackedFiles);
         //recursively traverse file structure and build up a list of files. if there is a new path create a
         //new file entry with a new UUID.
-        preexistingFiles.addAll(existingFiles);
-        checkIfFilesExistStill();
+        preexistingFiles.addAll(GlobalValues.trackedFiles);
+        //checkIfFilesExistStill();
         List<HashMap<String,String>> newFileList = crawler(existingFilePaths, new File(baseFilePath));
         preexistingFiles.addAll(newFileList);
 
