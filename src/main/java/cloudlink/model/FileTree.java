@@ -17,6 +17,30 @@ public class FileTree {
         return tree.get(currentLayer).get(selectedKey);
     }
 
+    public HashMap<Integer, HashMap<String, List<FinderItem>>> getTree() {
+        return tree;
+    }
+
+    public FinderItem getFile(String uuid){
+        for(Integer key1 :tree.keySet() ){
+
+            for(String key2: tree.get(key1).keySet() ){
+
+                for(FinderItem item :tree.get(key1).get(key2)){
+                    if(item instanceof File){
+                        if(((File) item).getUuid().equals(uuid)){
+                            return item;
+                        }
+                    }
+                }
+
+
+            }
+
+        }
+        return null;
+    }
+
     public void incrementLayer(){
         currentLayer++;
     }

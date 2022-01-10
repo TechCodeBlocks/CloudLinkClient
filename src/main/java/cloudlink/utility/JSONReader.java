@@ -33,6 +33,9 @@ public interface JSONReader {
         fileDataMap.put("path", (String) fileData.get("path"));
         fileDataMap.put("date-edited", (String) fileData.get("date-edited"));
         fileDataMap.put("online", (String) fileData.get("online"));
+        GlobalValues.trackedFiles.add(fileDataMap);
+        GlobalValues.trackedUUIDS.add((String) fileData.get("_id"));
+        GlobalValues.trackedPaths.add((String) fileData.get("path"));
         readFilesData.add(fileDataMap);
 
     }
