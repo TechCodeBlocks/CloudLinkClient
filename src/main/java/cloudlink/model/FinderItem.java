@@ -1,5 +1,8 @@
 package cloudlink.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +23,9 @@ public class FinderItem {
         directParent = parents.get(parents.size()-1);
 
 
+    }
+    public StringProperty nameProperty(){
+        return new SimpleStringProperty(name);
     }
 
     public String getPath() {
@@ -46,5 +52,11 @@ public class FinderItem {
         this.directParent = directParent;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }

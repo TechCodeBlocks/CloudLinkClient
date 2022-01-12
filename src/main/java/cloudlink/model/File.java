@@ -1,5 +1,8 @@
 package cloudlink.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class File extends FinderItem {
     private String dateEdited;
     private boolean online;
@@ -15,6 +18,18 @@ public class File extends FinderItem {
         localPath = null;
         status = Sychnronosity.NOT_TRAKCED;
 
+    }
+
+    public StringProperty dateEditedProperty(){
+        return new SimpleStringProperty(dateEdited);
+    }
+
+    public StringProperty trackedProperty(){
+        if(status == Sychnronosity.NOT_TRAKCED){
+            return new SimpleStringProperty("No");
+        }else{
+            return new SimpleStringProperty("Yes");
+        }
     }
 
     public String getDateEdited() {

@@ -1,7 +1,11 @@
 package cloudlink.view;
 
+import cloudlink.Main;
+import cloudlink.model.File;
 import cloudlink.model.FinderItem;
 import com.sun.tools.classfile.Dependency;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableStringValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,11 +17,11 @@ public class MainViewController {
     @FXML
     private TableView<FinderItem> remoteFiles;
     @FXML
-    private TableColumn remoteFilesFname;
+    private TableColumn<FinderItem, String> remoteFilesFname;
     @FXML
-    private TableColumn remoteFilesFdateEdited;
+    private TableColumn<FinderItem, String> remoteFilesFdateEdited;
     @FXML
-    private TableColumn remoteFilesFtracked;
+    private TableColumn<FinderItem, String> remoteFilesFtracked;
     //Files List for local tab
     @FXML
     private TableView<FinderItem> localFiles;
@@ -72,4 +76,85 @@ public class MainViewController {
     private Button localFileUploadBtn;
     @FXML
     private Button localFileUpdateBtn;
+
+    Main main;
+
+    @FXML
+    private void initialize(){
+        remoteFilesFname.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        remoteFilesFdateEdited.setCellValueFactory(cellData -> {
+            if(cellData.getValue() instanceof File){
+                return ((File) cellData.getValue()).dateEditedProperty();
+            }
+            return null;
+        });
+        remoteFilesFtracked.setCellValueFactory(cellData -> {
+            if(cellData.getValue() instanceof File){
+                boolean online = (((File) cellData.getValue()).isOnline());
+                if(online){
+
+                    return new SimpleStringProperty("true");
+                }else{
+                    return new SimpleStringProperty("false");
+                }
+
+        }
+        return null;
+    });
+
+        showRemoteFileDetails(null);
+
+
+        remoteFiles.getSelectionModel().selectedItemProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    if(newValue instanceof File){
+                    showRemoteFileDetails((File)newValue);
+                    remoteFileForwardBtn.setDisable(true);
+                    }
+                }
+        ));
+    }
+
+
+    private void showRemoteFileDetails(File file){
+        if(file != null){
+            remoteFileName.setText(file.getName());
+            switch (file.getStatus()){
+                case OUTDATED:
+                    remoteFileSync.setText("Outdated");
+                    remoteFileUpdateBtn.setDisable(false);
+                    remoteFileDownloadBtn.setDisable(true);
+                    break;
+                case UP_TO_DATE:
+                    remoteFileSync.setText("Up to date");
+                    remoteFileUpdateBtn.setDisable(true);
+                    remoteFileDownloadBtn.setDisable(true);
+                    break;
+                case NOT_TRAKCED:
+                    remoteFileSync.setText("Not tracked");
+                    remoteFileUpdateBtn.setDisable(true);
+                    remoteFileDownloadBtn.setDisable(false);
+                    break;
+            }
+            remoteFileOwner.setText(file.getDirectParent());
+            remoteFileNameLabel.setText("Name:");
+            remoteFileSyncLabel.setText("Status:");
+            remoteFileOwnerLabel.setText("Parent:");
+        }else{
+            remoteFileOwner.setText("");
+            remoteFileNameLabel.setText("");
+            remoteFileSyncLabel.setText("");
+            remoteFileOwnerLabel.setText("");
+
+            remoteFileName.setText("");
+            remoteFileSync.setText("");
+
+        }
+
+    }
+
+    public void setMain(Main main){
+        this.main = main;
+        remoteFiles.setItems(main.getRemoteFilesData("Documents",5));
+    }
 }
