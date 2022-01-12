@@ -78,6 +78,7 @@ public class MainViewController {
     private Button localFileUpdateBtn;
 
     Main main;
+    String selectedFolder;
 
     @FXML
     private void initialize(){
@@ -110,6 +111,8 @@ public class MainViewController {
                     if(newValue instanceof File){
                     showRemoteFileDetails((File)newValue);
                     remoteFileForwardBtn.setDisable(true);
+                    }else{
+                        selectedFolder = newValue.getName();
                     }
                 }
         ));
@@ -155,6 +158,21 @@ public class MainViewController {
 
     public void setMain(Main main){
         this.main = main;
-        remoteFiles.setItems(main.getRemoteFilesData("Documents",5));
+        main.getRemoteFiles().setSelectedKey("FilesTest");
+        //main.getRemoteFiles().incrementLayer();
+        remoteFiles.setItems(main.getRemoteFilesData());
+    }
+    @FXML
+    public void onIncrementPressed(){
+        main.getRemoteFiles().setSelectedKey(selectedFolder);
+        System.out.println("View Controller -> selected folder: " + selectedFolder);
+        main.getRemoteFiles().incrementLayer();
+        remoteFiles.setItems(main.getRemoteFilesData());
+        selectedFolder ="";
+    }
+    @FXML
+    public void onDecrementPressed(){
+        main.getRemoteFiles().decrementLayer();
+        remoteFiles.setItems(main.getRemoteFilesData());
     }
 }

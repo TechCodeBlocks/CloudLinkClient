@@ -6,8 +6,9 @@ import java.util.List;
 
 public class FileTree {
     HashMap<Integer, HashMap<String, List<FinderItem>>> tree;
-    private int currentLayer = 1;
+    private int currentLayer = 3;
     private String selectedKey;
+    private ArrayList<String> currentPath = new ArrayList<>();
 
     public FileTree(HashMap<Integer, HashMap<String, List<FinderItem>>> tree){
         this.tree = tree;
@@ -42,14 +43,27 @@ public class FileTree {
     }
 
     public void incrementLayer(){
+        System.out.println(selectedKey);
         currentLayer++;
+        System.out.println(currentLayer);
+//        currentPath.add(selectedKey);
     }
     public void decrementLayer(){
+        //reduce layer, remove end of path, get the new preceding layer from the current path value
         currentLayer--;
+        currentPath.remove(selectedKey);
+        selectedKey = currentPath.get(currentPath.size()-1);
     }
 
     public void setSelectedKey(String selectedKey){
         this.selectedKey = selectedKey;
+        currentPath.add(selectedKey);
+    }
+
+    public List<FinderItem> getLevelledFiles(){
+        System.out.println(currentLayer);
+        System.out.println(selectedKey);
+        return tree.get(currentLayer).get(selectedKey);
     }
 
 

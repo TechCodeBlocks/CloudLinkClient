@@ -13,8 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloudlink.view.MainViewController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloudlink.view.MainViewController">
    <children>
       <TabPane layoutX="8.0" layoutY="14.0" prefHeight="379.0" prefWidth="587.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
         <tabs>
@@ -58,8 +57,8 @@
                                     </GridPane>
                                     <ButtonBar layoutX="15.0" layoutY="155.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="154.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0">
                                       <buttons>
-                                        <Button fx:id="remoteFileBackwardBtn" alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="128.0" text="&lt;" />
-                                          <Button fx:id="remoteFileForwardBtn" mnemonicParsing="false" text="&gt;" />
+                                        <Button fx:id="remoteFileBackwardBtn" alignment="CENTER" mnemonicParsing="false" onAction="#onDecrementPressed" prefHeight="27.0" prefWidth="128.0" text="&lt;" />
+                                          <Button fx:id="remoteFileForwardBtn" mnemonicParsing="false" onAction="#onIncrementPressed" text="&gt;" />
                                       </buttons>
                                     </ButtonBar>
                                     <Button fx:id="remoteFileDownloadBtn" layoutX="36.0" layoutY="209.0" mnemonicParsing="false" text="Download" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="209.0" />

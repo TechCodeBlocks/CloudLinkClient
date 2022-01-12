@@ -97,14 +97,18 @@ public class Main extends Application {
         }
     }
 
-    public ObservableList<FinderItem> getRemoteFilesData(String preceding, int layer){
+    public ObservableList<FinderItem> getRemoteFilesData(){
         ObservableList<FinderItem> observableList = FXCollections.observableArrayList();
-        List<FinderItem> filesList = remoteFiles.getTree().get(layer).get(preceding);
+        List<FinderItem> filesList = remoteFiles.getLevelledFiles();
         for(FinderItem item : filesList){
             System.out.println(item.getName());
             observableList.add(item);
         }
         return observableList;
 
+    }
+
+    public FileTree getRemoteFiles(){
+        return remoteFiles;
     }
 }
