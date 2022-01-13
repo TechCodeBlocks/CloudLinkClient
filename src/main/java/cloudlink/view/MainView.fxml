@@ -57,8 +57,8 @@
                                     </GridPane>
                                     <ButtonBar layoutX="15.0" layoutY="155.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="154.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0">
                                       <buttons>
-                                        <Button fx:id="remoteFileBackwardBtn" alignment="CENTER" mnemonicParsing="false" onAction="#onDecrementPressed" prefHeight="27.0" prefWidth="128.0" text="&lt;" />
-                                          <Button fx:id="remoteFileForwardBtn" mnemonicParsing="false" onAction="#onIncrementPressed" text="&gt;" />
+                                        <Button fx:id="remoteFileBackwardBtn" alignment="CENTER" mnemonicParsing="false" onAction="#onRemoteDecrementPressed" prefHeight="27.0" prefWidth="128.0" text="&lt;" />
+                                          <Button fx:id="remoteFileForwardBtn" mnemonicParsing="false" onAction="#onRemoteIncrementPressed" text="&gt;" />
                                       </buttons>
                                     </ButtonBar>
                                     <Button fx:id="remoteFileDownloadBtn" layoutX="36.0" layoutY="209.0" mnemonicParsing="false" text="Download" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="209.0" />

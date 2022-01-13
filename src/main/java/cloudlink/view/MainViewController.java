@@ -108,11 +108,17 @@ public class MainViewController {
 
         remoteFiles.getSelectionModel().selectedItemProperty().addListener(
                 ((observable, oldValue, newValue) -> {
-                    if(newValue instanceof File){
+                    if(newValue == null){
+                        remoteFileForwardBtn.setDisable(true);
+                        remoteFileDownloadBtn.setDisable(true);
+                        remoteFileUpdateBtn.setDisable(true);
+                        showRemoteFileDetails(null);
+                    }else if(newValue instanceof File){
                     showRemoteFileDetails((File)newValue);
                     remoteFileForwardBtn.setDisable(true);
                     }else{
                         selectedFolder = newValue.getName();
+                        remoteFileForwardBtn.setDisable(false);
                     }
                 }
         ));
@@ -159,20 +165,20 @@ public class MainViewController {
     public void setMain(Main main){
         this.main = main;
         main.getRemoteFiles().setSelectedKey("FilesTest");
-        //main.getRemoteFiles().incrementLayer();
         remoteFiles.setItems(main.getRemoteFilesData());
     }
     @FXML
-    public void onIncrementPressed(){
+    public void onRemoteIncrementPressed(){
         main.getRemoteFiles().setSelectedKey(selectedFolder);
-        System.out.println("View Controller -> selected folder: " + selectedFolder);
         main.getRemoteFiles().incrementLayer();
         remoteFiles.setItems(main.getRemoteFilesData());
         selectedFolder ="";
     }
     @FXML
-    public void onDecrementPressed(){
-        main.getRemoteFiles().decrementLayer();
-        remoteFiles.setItems(main.getRemoteFilesData());
+    public void onRemoteDecrementPressed(){
+        if(main.getRemoteFiles().getCurrentLayer() != main.getRemoteFiles().getBaseLayer()) {
+            main.getRemoteFiles().decrementLayer();
+            remoteFiles.setItems(main.getRemoteFilesData());
+        }
     }
 }

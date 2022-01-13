@@ -1,17 +1,35 @@
 package cloudlink.model;
 
+import cloudlink.utility.GlobalValues;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class FileTree {
     HashMap<Integer, HashMap<String, List<FinderItem>>> tree;
-    private int currentLayer = 3;
+    private int currentLayer;
+    private int baseLayer;
     private String selectedKey;
     private ArrayList<String> currentPath = new ArrayList<>();
 
     public FileTree(HashMap<Integer, HashMap<String, List<FinderItem>>> tree){
         this.tree = tree;
+        for(Integer key1 :tree.keySet() ){
+
+            for(String key2: tree.get(key1).keySet() ){
+
+                if(key2.equals(GlobalValues.baseFolder)){
+                    baseLayer = key1;
+                    currentLayer = baseLayer;
+                    break;
+                }
+
+
+            }
+
+        }
+
     }
 
     public List<FinderItem> getFiles(){
@@ -46,10 +64,8 @@ public class FileTree {
         System.out.println(selectedKey);
         currentLayer++;
         System.out.println(currentLayer);
-//        currentPath.add(selectedKey);
     }
     public void decrementLayer(){
-        //reduce layer, remove end of path, get the new preceding layer from the current path value
         currentLayer--;
         currentPath.remove(selectedKey);
         selectedKey = currentPath.get(currentPath.size()-1);
@@ -61,13 +77,14 @@ public class FileTree {
     }
 
     public List<FinderItem> getLevelledFiles(){
-        System.out.println(currentLayer);
-        System.out.println(selectedKey);
         return tree.get(currentLayer).get(selectedKey);
     }
 
+    public int getCurrentLayer() {
+        return currentLayer;
+    }
 
-
-    /*
-    * Class stub*/
+    public int getBaseLayer() {
+        return baseLayer;
+    }
 }

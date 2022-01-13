@@ -62,7 +62,7 @@ public class TreeBuilder {
             String folderPath = "";
 
             for(int i=0; i<file.getParents().size();i++){
-                folderPath += file.getParents().get(i) + "/";
+                folderPath += "/" + file.getParents().get(i);
 
 
             }
