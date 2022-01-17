@@ -83,6 +83,9 @@ public class Main extends Application {
             rootLayout = (BorderPane) loader.load();
 
             Scene scene = new Scene(rootLayout);
+            File file = new File(System.getProperty("user.dir").toString() + "/src/main/java/cloudlink/view/style/style.css");
+
+            scene.getStylesheets().add(file.toURI().toURL().toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
         }catch (IOException e){
@@ -129,6 +132,10 @@ public class Main extends Application {
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(loginPage);
+            File file = new File(System.getProperty("user.dir").toString() + "/src/main/java/cloudlink/view/style/style.css");
+
+            scene.getStylesheets().add(file.toURI().toURL().toExternalForm());
+
 
 //            scene.getStylesheets().add("Users/benjaminsolomons/Documents/style.css");
             dialogStage.setScene(scene);
