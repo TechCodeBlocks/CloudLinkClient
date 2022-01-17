@@ -8,8 +8,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloudlink.view.LoginViewController">
+<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloudlink.view.LoginViewController">
    <children>
       <TabPane layoutX="157.0" layoutY="40.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
         <tabs>
@@ -17,12 +16,12 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField layoutX="179.0" layoutY="62.0" AnchorPane.leftAnchor="179.0" AnchorPane.topAnchor="70.0" />
+                        <TextField fx:id="userIDField" layoutX="179.0" layoutY="62.0" promptText="Enter your user id (numeric)" AnchorPane.leftAnchor="179.0" AnchorPane.topAnchor="70.0" />
                         <Label layoutX="107.0" layoutY="67.0" text="Username:" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="70.0" />
                         <Label layoutX="111.0" layoutY="117.0" text="Password:" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="120.0" />
-                        <Button layoutX="167.0" layoutY="180.0" mnemonicParsing="false" text="Login" AnchorPane.bottomAnchor="152.0" AnchorPane.leftAnchor="167.0" AnchorPane.rightAnchor="167.0" />
-                        <PasswordField layoutX="131.0" layoutY="147.0" AnchorPane.leftAnchor="179.0" AnchorPane.topAnchor="120.0" />
-                        <Label layoutX="179.0" layoutY="252.0" text="Label" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="179.0" AnchorPane.rightAnchor="179.0" />
+                        <Button layoutX="167.0" layoutY="180.0" mnemonicParsing="false" onAction="#handleLoginPressed" text="Login" AnchorPane.bottomAnchor="152.0" AnchorPane.leftAnchor="167.0" AnchorPane.rightAnchor="167.0" />
+                        <PasswordField fx:id="passwordField" layoutX="131.0" layoutY="147.0" AnchorPane.leftAnchor="179.0" AnchorPane.topAnchor="120.0" />
+                        <Label fx:id="loginStatus" layoutX="26.0" layoutY="252.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="17.0" prefWidth="339.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="27.0" />
                      </children>
                   </AnchorPane>
             </content>

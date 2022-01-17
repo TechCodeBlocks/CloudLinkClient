@@ -4,6 +4,7 @@ import cloudlink.model.FileTree;
 import cloudlink.model.FinderItem;
 import cloudlink.utility.JSONReader;
 import cloudlink.utility.TreeBuilder;
+import cloudlink.view.LoginViewController;
 import cloudlink.view.MainViewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -12,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -23,6 +25,7 @@ public class Main extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private FileTree remoteFiles;
+    URL styleURL;
     //On start: pull the latest version of file list from cloud version.
     //Check for all online files, log these. Do the same with the local file list, for any local files are logged as online
     //check it's uuid to find online copy, compare date-edited values to work out whether synchronisation is required.
@@ -31,9 +34,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        try{
+            new File("src/main/java/cloudlink/view/style/style.css").toURI().toURL();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        showLoginDialogue();
         getRemoteTree();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("CloudLink");
+
         initRootLayout();
         showMainPage();
 
@@ -106,6 +116,32 @@ public class Main extends Application {
         }
         return observableList;
 
+    }
+
+    public void showLoginDialogue(){
+        try {
+            URL url = new File("src/main/java/cloudlink/view/LoginView.fxml").toURI().toURL();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(url);
+            AnchorPane loginPage = (AnchorPane) loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Login");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(loginPage);
+
+//            scene.getStylesheets().add("Users/benjaminsolomons/Documents/style.css");
+            dialogStage.setScene(scene);
+            LoginViewController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            dialogStage.showAndWait();
+
+
+//            PersonOverviewController controller = loader.getController();
+//            controller.setMain(this);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     public FileTree getRemoteFiles(){
