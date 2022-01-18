@@ -99,8 +99,8 @@ public class LoginViewController {
         return false;
     }
     private boolean isUserValid(){
-        return true;
-        //return HTTPClient.verifyUser(Integer.parseInt(userIDField.getText()), passwordField.getText());
+        //Use string.hashcode() to get password hash to use. This will be implemented later.
+        return HTTPClient.verifyUser(userIDField.getText(), passwordField.getText());
     }
 
 }

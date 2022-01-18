@@ -212,7 +212,7 @@ public interface HTTPClient {
 
     }
     //not required in server program, will be used in http client for clients.
-    static Boolean verifyUser(int id, String passwordHash){
+    static Boolean verifyUser(String id, String passwordHash){
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() ->{
             try {
                 URL url = new URL("https://cloudlink.azurewebsites.net/api/userverify");
@@ -229,6 +229,7 @@ public interface HTTPClient {
                 dataOutputStream.close();
                 connection.disconnect();
                 if (connection.getResponseCode() == 400) {
+                    System.out.println(connection.getOutputStream().toString());
                     System.out.println("error");
                     return false;
                 }
