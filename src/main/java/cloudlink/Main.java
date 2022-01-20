@@ -25,6 +25,7 @@ public class Main extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private FileTree remoteFiles;
+    private FileTree localFiles;
     URL styleURL;
     //On start: pull the latest version of file list from cloud version.
     //Check for all online files, log these. Do the same with the local file list, for any local files are logged as online
@@ -120,6 +121,12 @@ public class Main extends Application {
         return observableList;
 
     }
+    public ObservableList<FinderItem> getLocalFilesData(){
+        ObservableList<FinderItem> observableList = FXCollections.observableArrayList();
+        //Do similar logic to other section but with remote data.
+        return observableList;
+
+    }
 
     public void showLoginDialogue(){
         try {
@@ -153,5 +160,9 @@ public class Main extends Application {
 
     public FileTree getRemoteFiles(){
         return remoteFiles;
+    }
+
+    public FileTree getLocalFiles() {
+        return localFiles;
     }
 }

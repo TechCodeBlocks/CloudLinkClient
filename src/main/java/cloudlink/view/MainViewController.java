@@ -3,9 +3,7 @@ package cloudlink.view;
 import cloudlink.Main;
 import cloudlink.model.File;
 import cloudlink.model.FinderItem;
-import com.sun.tools.classfile.Dependency;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableStringValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,11 +24,11 @@ public class MainViewController {
     @FXML
     private TableView<FinderItem> localFiles;
     @FXML
-    private TableColumn localFilesFname;
+    private TableColumn<FinderItem, String> localFilesFname;
     @FXML
-    private TableColumn localFilesFdateEdited;
+    private TableColumn<FinderItem, String> localFilesFdateEdited;
     @FXML
-    private TableColumn localFilesFtracked;
+    private TableColumn<FinderItem, String> localFilesFtracked;
     //Labels and text for the remote files tab
     @FXML
     private Label remoteFileNameLabel;
@@ -78,7 +76,8 @@ public class MainViewController {
     private Button localFileUpdateBtn;
 
     Main main;
-    String selectedFolder;
+    String selectedRemoteFolder;
+    String selectedLocalFolder;
 
     @FXML
     private void initialize(){
@@ -102,8 +101,30 @@ public class MainViewController {
         }
         return null;
     });
+        localFilesFname.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        localFilesFdateEdited.setCellValueFactory(cellData -> {
+            if(cellData.getValue() instanceof File){
+                return ((File) cellData.getValue()).dateEditedProperty();
+            }
+            return null;
+        });
+        localFilesFtracked.setCellValueFactory(cellData -> {
+            if(cellData.getValue() instanceof File){
+                boolean online = (((File) cellData.getValue()).isOnline());
+                if(online){
+
+                    return new SimpleStringProperty("true");
+                }else{
+                    return new SimpleStringProperty("false");
+                }
+
+            }
+            return null;
+        });
 
         showRemoteFileDetails(null);
+        showLocalFileDetails(null);
+
 
 
         remoteFiles.getSelectionModel().selectedItemProperty().addListener(
@@ -117,11 +138,27 @@ public class MainViewController {
                     showRemoteFileDetails((File)newValue);
                     remoteFileForwardBtn.setDisable(true);
                     }else{
-                        selectedFolder = newValue.getName();
+                        selectedRemoteFolder = newValue.getName();
                         remoteFileForwardBtn.setDisable(false);
                     }
                 }
         ));
+        localFiles.getSelectionModel().selectedItemProperty().addListener(
+                ((observable, oldValue, newValue) ->{
+                    if(newValue == null){
+                        localFileForwardBtn.setDisable(true);
+                        localFileUploadBtn.setDisable(true);
+                        localFileUpdateBtn.setDisable(true);
+                        showLocalFileDetails(null);
+                    }else if(newValue instanceof File){
+                        showLocalFileDetails((File)newValue);
+                        remoteFileForwardBtn.setDisable(true);
+                    }else{
+                        selectedLocalFolder = newValue.getName();
+                        localFileForwardBtn.setDisable(false);
+                    }
+                } )
+        );
     }
 
 
@@ -162,6 +199,43 @@ public class MainViewController {
 
     }
 
+    private void showLocalFileDetails(File file){
+        if(file != null){
+            localFileName.setText(file.getName());
+            switch (file.getStatus()){
+                case OUTDATED:
+                    localFileSync.setText("Outdated");
+                    localFileUpdateBtn.setDisable(false);
+                    localFileUploadBtn.setDisable(true);
+                    break;
+                case UP_TO_DATE:
+                    localFileSync.setText("Up to date");
+                    localFileUpdateBtn.setDisable(true);
+                    localFileUploadBtn.setDisable(true);
+                    break;
+                case NOT_TRAKCED:
+                    localFileSync.setText("Not tracked");
+                    localFileUpdateBtn.setDisable(true);
+                    localFileUploadBtn.setDisable(false);
+                    break;
+            }
+            localFileOwner.setText(file.getDirectParent());
+            localFileNameLabel.setText("Name:");
+            localFileSyncLabel.setText("Status:");
+            localFileOwnerLabel.setText("Parent:");
+        }else{
+            localFileOwner.setText("");
+            localFileNameLabel.setText("");
+            localFileSyncLabel.setText("");
+            localFileOwnerLabel.setText("");
+
+            localFileName.setText("");
+            localFileSync.setText("");
+
+        }
+
+    }
+
     public void setMain(Main main){
         this.main = main;
         main.getRemoteFiles().setSelectedKey("FilesTest");
@@ -169,10 +243,10 @@ public class MainViewController {
     }
     @FXML
     public void onRemoteIncrementPressed(){
-        main.getRemoteFiles().setSelectedKey(selectedFolder);
+        main.getRemoteFiles().setSelectedKey(selectedRemoteFolder);
         main.getRemoteFiles().incrementLayer();
         remoteFiles.setItems(main.getRemoteFilesData());
-        selectedFolder ="";
+        selectedRemoteFolder ="";
     }
     @FXML
     public void onRemoteDecrementPressed(){
@@ -181,4 +255,12 @@ public class MainViewController {
             remoteFiles.setItems(main.getRemoteFilesData());
         }
     }
+    @FXML
+    public void onLocalIncrementPresse(){
+        main.getLocalFiles().setSelectedKey(selectedLocalFolder);
+        main.getRemoteFiles().incrementLayer();
+        localFiles.setItems(main.getLocalFilesData());
+        selectedLocalFolder = "";
+    }
+
 }
