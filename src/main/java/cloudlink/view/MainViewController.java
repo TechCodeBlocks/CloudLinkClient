@@ -256,7 +256,7 @@ public class MainViewController {
         }
     }
     @FXML
-    public void onLocalIncrementPresse(){
+    public void onLocalIncrementPressed(){
         main.getLocalFiles().setSelectedKey(selectedLocalFolder);
         main.getRemoteFiles().incrementLayer();
         localFiles.setItems(main.getLocalFilesData());
