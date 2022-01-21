@@ -3,6 +3,8 @@ package cloudlink.view;
 import cloudlink.Main;
 import cloudlink.model.File;
 import cloudlink.model.FinderItem;
+import cloudlink.utility.GlobalValues;
+import cloudlink.utility.HTTPClient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -78,6 +80,7 @@ public class MainViewController {
     Main main;
     String selectedRemoteFolder;
     String selectedLocalFolder;
+    File selectedFile;
 
     @FXML
     private void initialize(){
@@ -164,6 +167,7 @@ public class MainViewController {
 
     private void showRemoteFileDetails(File file){
         if(file != null){
+            selectedFile = file;
             remoteFileName.setText(file.getName());
             switch (file.getStatus()){
                 case OUTDATED:
@@ -201,6 +205,7 @@ public class MainViewController {
 
     private void showLocalFileDetails(File file){
         if(file != null){
+            selectedFile = file;
             localFileName.setText(file.getName());
             switch (file.getStatus()){
                 case OUTDATED:
@@ -261,6 +266,34 @@ public class MainViewController {
         main.getRemoteFiles().incrementLayer();
         localFiles.setItems(main.getLocalFilesData());
         selectedLocalFolder = "";
+    }
+
+    @FXML
+    public void onRemoteDownloadPressed(){
+        String id = selectedFile.getUuid();
+        String path = GlobalValues.basePath + selectedFile.getName();
+        HTTPClient.downloadFile(id, path);
+    }
+
+    @FXML
+    public void onRemoteUpdatePressed(){
+        String id = selectedFile.getUuid();
+        String path = selectedFile.getLocalPath();
+        HTTPClient.downloadFile(id, path);
+    }
+
+    @FXML
+    public void onLocalUploadPressed(){
+        String id = selectedFile.getUuid();
+        String path = GlobalValues.basePath + selectedFile.getName();
+        HTTPClient.uploadFile(id, path);
+    }
+
+    @FXML
+    public void onLocalUpdatePressed(){
+        String id = selectedFile.getUuid();
+        String path = GlobalValues.basePath + selectedFile.getName();
+        HTTPClient.downloadFile(id, path);
     }
 
 }

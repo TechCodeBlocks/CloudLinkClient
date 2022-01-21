@@ -6,6 +6,8 @@ import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microsoft.signalr.HubConnection;
+import com.microsoft.signalr.HubConnectionBuilder;
 import org.json.simple.JSONObject;
 
 import java.io.*;
@@ -21,7 +23,7 @@ public interface HTTPClient {
     //Functions needed:
     //Upload file data: json format from HashMap, post request to the correct endpoint
     //Delete file data: send request with the id of the file to delete as a paramater called _id
-    public static Boolean uploadFileData(HashMap<String, String> fileData) {
+    static Boolean uploadFileData(HashMap<String, String> fileData) {
         System.out.println("Upload file data: Called");
         //Async execution of code
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
@@ -163,13 +165,13 @@ public interface HTTPClient {
 
     }
 
-    public static Boolean uploadFile(HashMap<String, String> fileData) {
+    public static Boolean uploadFile(String id, String path) {
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
-            String filepath = fileData.get("path");
+            String filepath = path;
             String connectStr = "DefaultEndpointsProtocol=https;AccountName=cloudlinkfilestore;AccountKey=c2CcTbSpewXh4jU85enZGpHYyiq2elYAUnVpKJLxIotTZWRoBFiQwcoj5kvaB4C6quaQ7KkifiJFdKXHGOPdWg==;EndpointSuffix=core.windows.net";
             BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().connectionString(connectStr).buildClient();
             BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient("ytterbium");
-            BlobClient blobClient = blobContainerClient.getBlobClient(fileData.get("_id"));
+            BlobClient blobClient = blobContainerClient.getBlobClient(id);
             blobClient.uploadFromFile(filepath, true);
             //send signalr message to notify client
 
@@ -188,16 +190,16 @@ public interface HTTPClient {
 
     }
     //Will need to run a get request to get file data before running this function. Should be added to the cloud database before it can be downloaded
-    public static Boolean downloadFile(HashMap<String, String> fileData) {
+    static Boolean downloadFile(String fileID, String path) {
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
 
-            File downloadedFile = new File(fileData.get("path"));
+            //File downloadedFile = new File(fileData.get("path"));
             //File downloadedFile = new File("/Users/sandrarolfe/Documents/servertest/DownloadTest.rtf");
             String connectStr = "DefaultEndpointsProtocol=https;AccountName=cloudlinkfilestore;AccountKey=c2CcTbSpewXh4jU85enZGpHYyiq2elYAUnVpKJLxIotTZWRoBFiQwcoj5kvaB4C6quaQ7KkifiJFdKXHGOPdWg==;EndpointSuffix=core.windows.net";
             BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().connectionString(connectStr).buildClient();
             BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient("ytterbium");
-            BlobClient blobClient = blobContainerClient.getBlobClient(fileData.get("_id"));
-            blobClient.downloadToFile(fileData.get("path"));
+            BlobClient blobClient = blobContainerClient.getBlobClient(fileID);
+            blobClient.downloadToFile(path);
             //blobClient.downloadToFile("/Users/sandrarolfe/Documents/servertest/DownloadTest.rtf");
             return true;
         });

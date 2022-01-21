@@ -16,6 +16,7 @@ public interface FileDataHandler {
     //Parse the UUID/paths to the crawler on start.
     //Once all data is present, check the uuids present in both file trees and carry out the necessary logic to mark things
     //with correct synchronosity.
+    //Only adds tracking info to the remote files tree. May be beneficial to add it to local file tracking too.
 
     static void insertTracking(FileTree local, FileTree remote){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");

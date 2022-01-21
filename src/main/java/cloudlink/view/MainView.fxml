@@ -61,8 +61,8 @@
                                           <Button fx:id="remoteFileForwardBtn" mnemonicParsing="false" onAction="#onRemoteIncrementPressed" text="&gt;" />
                                       </buttons>
                                     </ButtonBar>
-                                    <Button fx:id="remoteFileDownloadBtn" layoutX="36.0" layoutY="209.0" mnemonicParsing="false" text="Download" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="209.0" />
-                                    <Button fx:id="remoteFileUpdateBtn" layoutX="144.0" layoutY="209.0" mnemonicParsing="false" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="209.0" />
+                                    <Button fx:id="remoteFileDownloadBtn" layoutX="36.0" layoutY="209.0" mnemonicParsing="false" onAction="#onRemoteDownloadPressed" text="Download" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="209.0" />
+                                    <Button fx:id="remoteFileUpdateBtn" layoutX="144.0" layoutY="209.0" mnemonicParsing="false" onAction="#onRemoteUpdatePressed" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="209.0" />
                                  </children>
                               </AnchorPane>
                           </items>
@@ -115,8 +115,8 @@
                                           <Button fx:id="localFileForwardBtn" mnemonicParsing="false" onAction="#onLocalIncrementPressed" text="&gt;" />
                                        </buttons>
                                     </ButtonBar>
-                                    <Button fx:id="localFileUploadBtn" layoutX="36.0" layoutY="209.0" mnemonicParsing="false" text="Upload" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="209.0" />
-                                    <Button fx:id="localFileUpdateBtn" layoutX="144.0" layoutY="209.0" mnemonicParsing="false" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="209.0" />
+                                    <Button fx:id="localFileUploadBtn" layoutX="36.0" layoutY="209.0" mnemonicParsing="false" onAction="#onLocalUploadPressed" text="Upload" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="209.0" />
+                                    <Button fx:id="localFileUpdateBtn" layoutX="144.0" layoutY="209.0" mnemonicParsing="false" onAction="#onRemoteUpdatePressed" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="209.0" />
                                  </children>
                               </AnchorPane>
                            </items>

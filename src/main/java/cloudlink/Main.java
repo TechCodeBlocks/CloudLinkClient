@@ -6,6 +6,8 @@ import cloudlink.utility.JSONReader;
 import cloudlink.utility.TreeBuilder;
 import cloudlink.view.LoginViewController;
 import cloudlink.view.MainViewController;
+import com.microsoft.signalr.HubConnection;
+import com.microsoft.signalr.HubConnectionBuilder;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +29,8 @@ public class Main extends Application {
     private FileTree remoteFiles;
     private FileTree localFiles;
     URL styleURL;
+    private static HubConnection hubConnection;
+    private static String hubConnectionURL = "https://cloudlinkmessage.azurewebsites.net/api";
     //On start: pull the latest version of file list from cloud version.
     //Check for all online files, log these. Do the same with the local file list, for any local files are logged as online
     //check it's uuid to find online copy, compare date-edited values to work out whether synchronisation is required.
@@ -64,6 +68,15 @@ public class Main extends Application {
 //        JSONWriter.write(newFiles);
 
         launch(args);
+    }
+
+    private static void initialiseHubConnection(){
+        hubConnection = HubConnectionBuilder.create(hubConnectionURL).build();
+        hubConnection.start();
+    }
+
+    public void sendFileRequest(String fileID){
+        hubConnection.send("newMessage", "file-req::"+fileID);
     }
 
     public void getRemoteTree(){
