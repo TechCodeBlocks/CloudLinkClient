@@ -2,6 +2,7 @@ package cloudlink.model;
 
 import cloudlink.utility.GlobalValues;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +59,14 @@ public class FileTree {
 
         }
         return null;
+    }
+    public String getPath(){
+        String completePath = "";
+        for(String comp : currentPath){
+            completePath = comp + java.io.File.separator;
+        }
+        return  completePath;
+
     }
 
     public void incrementLayer(){

@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.util.HashMap;
+
 public class MainViewController {
     //Files list for remote tab
     @FXML
@@ -251,6 +253,7 @@ public class MainViewController {
         main.getRemoteFiles().setSelectedKey(selectedRemoteFolder);
         main.getRemoteFiles().incrementLayer();
         remoteFiles.setItems(main.getRemoteFilesData());
+        GlobalValues.currentRemoteFolder = main.getRemoteFiles().getPath();
         selectedRemoteFolder ="";
     }
     @FXML
@@ -258,6 +261,7 @@ public class MainViewController {
         if(main.getRemoteFiles().getCurrentLayer() != main.getRemoteFiles().getBaseLayer()) {
             main.getRemoteFiles().decrementLayer();
             remoteFiles.setItems(main.getRemoteFilesData());
+            GlobalValues.currentRemoteFolder = main.getRemoteFiles().getPath();
         }
     }
     @FXML
@@ -265,13 +269,22 @@ public class MainViewController {
         main.getLocalFiles().setSelectedKey(selectedLocalFolder);
         main.getRemoteFiles().incrementLayer();
         localFiles.setItems(main.getLocalFilesData());
+        GlobalValues.currentLocalFolder = main.getLocalFiles().getPath();
         selectedLocalFolder = "";
+    }
+
+    @FXML void onLocalDecrementPressed(){
+        if(main.getLocalFiles().getCurrentLayer() != main.getLocalFiles().getBaseLayer()){
+            main.getLocalFiles().decrementLayer();
+            localFiles.setItems(main.getLocalFilesData());
+            GlobalValues.currentLocalFolder = main.getLocalFiles().getPath();
+        }
     }
 
     @FXML
     public void onRemoteDownloadPressed(){
         String id = selectedFile.getUuid();
-        String path = GlobalValues.basePath + selectedFile.getName();
+        String path = GlobalValues.currentLocalFolder + java.io.File.separator + selectedFile.getName();
         HTTPClient.downloadFile(id, path);
     }
 
@@ -279,20 +292,26 @@ public class MainViewController {
     public void onRemoteUpdatePressed(){
         String id = selectedFile.getUuid();
         String path = selectedFile.getLocalPath();
-        HTTPClient.downloadFile(id, path);
+        HTTPClient.uploadFile(id, path);
     }
 
     @FXML
     public void onLocalUploadPressed(){
         String id = selectedFile.getUuid();
         String path = GlobalValues.basePath + selectedFile.getName();
+        HashMap<String,String> fileData = new HashMap<>();
+        fileData.put("_id",selectedFile.getUuid());
+        fileData.put("path", selectedFile.getLocalPath());
+        fileData.put("date-edited", selectedFile.getDateEdited());
+        fileData.put("online", "true");
+        HTTPClient.uploadFileData(fileData);
         HTTPClient.uploadFile(id, path);
     }
 
     @FXML
     public void onLocalUpdatePressed(){
         String id = selectedFile.getUuid();
-        String path = GlobalValues.basePath + selectedFile.getName();
+        String path = selectedFile.getLocalPath();
         HTTPClient.downloadFile(id, path);
     }
 

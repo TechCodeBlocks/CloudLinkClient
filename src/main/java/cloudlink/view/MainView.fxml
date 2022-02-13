@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloudlink.view.MainViewController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloudlink.view.MainViewController">
    <children>
       <TabPane layoutX="8.0" layoutY="14.0" prefHeight="379.0" prefWidth="587.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
         <tabs>
@@ -111,12 +111,12 @@
                                     </GridPane>
                                     <ButtonBar layoutX="15.0" layoutY="155.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="154.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="155.0">
                                        <buttons>
-                                          <Button fx:id="localFileBackwardBtn" alignment="CENTER" mnemonicParsing="false" onAction="#onRemoteDecrementPressed" prefHeight="27.0" prefWidth="128.0" text="&lt;" />
+                                          <Button fx:id="localFileBackwardBtn" alignment="CENTER" mnemonicParsing="false" onAction="#onLocalDecrementPressed" prefHeight="27.0" prefWidth="128.0" text="&lt;" />
                                           <Button fx:id="localFileForwardBtn" mnemonicParsing="false" onAction="#onLocalIncrementPressed" text="&gt;" />
                                        </buttons>
                                     </ButtonBar>
                                     <Button fx:id="localFileUploadBtn" layoutX="36.0" layoutY="209.0" mnemonicParsing="false" onAction="#onLocalUploadPressed" text="Upload" AnchorPane.leftAnchor="36.0" AnchorPane.topAnchor="209.0" />
-                                    <Button fx:id="localFileUpdateBtn" layoutX="144.0" layoutY="209.0" mnemonicParsing="false" onAction="#onRemoteUpdatePressed" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="209.0" />
+                                    <Button fx:id="localFileUpdateBtn" layoutX="144.0" layoutY="209.0" mnemonicParsing="false" onAction="#onLocalUpdatePressed" text="Update" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="209.0" />
                                  </children>
                               </AnchorPane>
                            </items>
