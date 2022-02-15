@@ -9,12 +9,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -24,7 +26,6 @@ public interface HTTPClient {
     //Upload file data: json format from HashMap, post request to the correct endpoint
     //Delete file data: send request with the id of the file to delete as a paramater called _id
     static Boolean uploadFileData(HashMap<String, String> fileData) {
-        System.out.println("Upload file data: Called");
         //Async execution of code
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
             try {
@@ -76,8 +77,42 @@ public interface HTTPClient {
         }
         return false;
     }
+    //Use to mark files as online when they are uploaded.
+    static Boolean updateFileData(String id, HashMap<String, String> updateParameters ){
+        CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(()->{
+            try{
+                URL url = new URL("http://192.168.1.163:5000/cloudlink/updatefile/");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content=Type", "application/json; charset=UTF-8");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setDoOutput(true);
+                JSONObject body = new JSONObject();
+                body.put("fileID", id);
+                body.put("updateKV", JSONObject.toJSONString(updateParameters));
+                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
+                dataOutputStream.write(body.toString().getBytes());
+                dataOutputStream.close();
+                connection.disconnect();
+                if(connection.getResponseCode() == 200){
+                    return true;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return false;
+        });
+        try{
+            Boolean result = completableFuture.get();
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
 
-    public static Boolean deleteFileData(String id) {
+    }
+
+     static Boolean deleteFileData(String id) {
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
             String baseURL = "https://cloudlink.azurewebsites.net/api/delete-item?_id=";
             String requestURL = baseURL + id;
@@ -119,7 +154,7 @@ public interface HTTPClient {
         return false;
     }
 
-    public static HashMap<String, String> getFileData(String id){
+     static HashMap<String, String> getFileData(String id){
         CompletableFuture<HashMap<String, String>> completableFuture = CompletableFuture.supplyAsync(()->{
             try {
                 URL url = new URL("https://cloudlink.azurewebsites.net/api/get-single-file-data?");
@@ -164,8 +199,44 @@ public interface HTTPClient {
         return new HashMap<String,String>();
 
     }
+//Get complete list, may need to be used in server program too.
+    static JSONObject getFilesData(){
+        CompletableFuture<JSONObject> completableFuture = CompletableFuture.supplyAsync(()->{
+            try{
+                URL url = new URL("http://192.168.1.163:5000/cloudlink/files?userid=" + GlobalValues.userid);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setDoOutput(true);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuffer buf = new StringBuffer();
+                String line;
+                while ((line = reader.readLine())!=null) {
+                    buf.append(line);
+                }
+                String jsonText = buf.toString();
+                JSONParser parser = new JSONParser();
+                JSONObject obj = (JSONObject) parser.parse(jsonText);
+                return obj;
 
-    public static Boolean uploadFile(String id, String path) {
+            }catch (Exception e){
+                e.printStackTrace();
+
+            }
+            return null;
+        });
+
+        try {
+            return completableFuture.get();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    static Boolean uploadFile(String id, String path) {
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
             String filepath = path;
             String connectStr = "DefaultEndpointsProtocol=https;AccountName=cloudlinkfilestore;AccountKey=c2CcTbSpewXh4jU85enZGpHYyiq2elYAUnVpKJLxIotTZWRoBFiQwcoj5kvaB4C6quaQ7KkifiJFdKXHGOPdWg==;EndpointSuffix=core.windows.net";

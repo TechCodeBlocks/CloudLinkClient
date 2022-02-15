@@ -7,10 +7,7 @@ import cloudlink.utility.GlobalValues;
 import cloudlink.utility.HTTPClient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import java.util.HashMap;
 
@@ -306,6 +303,10 @@ public class MainViewController {
         fileData.put("online", "true");
         HTTPClient.uploadFileData(fileData);
         HTTPClient.uploadFile(id, path);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Uploaded file successfully!");
+        alert.setContentText("This file is now tracked by the Cloudlink system");
+        alert.showAndWait();
     }
 
     @FXML
