@@ -23,6 +23,12 @@ public class FileTree {
                 if(key2.equals(GlobalValues.baseFolder)){
                     baseLayer = key1;
                     currentLayer = baseLayer;
+                    //selectedKey = GlobalValues.baseFolder;
+                    break;
+                }else if(key2.equals(GlobalValues.remoteBaseFolder)){
+                    baseLayer = key1;
+                    currentLayer = baseLayer;
+                    //selectedKey = GlobalValues.remoteBaseFolder;
                     break;
                 }
 
@@ -70,11 +76,14 @@ public class FileTree {
     }
 
     public void incrementLayer(){
+        System.out.println("Incrementing");
         System.out.println(selectedKey);
         currentLayer++;
         System.out.println(currentLayer);
     }
     public void decrementLayer(){
+        System.out.println("decrementing");
+        System.out.println(currentPath);
         currentLayer--;
         currentPath.remove(selectedKey);
         selectedKey = currentPath.get(currentPath.size()-1);
@@ -86,7 +95,9 @@ public class FileTree {
     }
 
     public List<FinderItem> getLevelledFiles(){
-        return tree.get(currentLayer).get(selectedKey);
+
+            return tree.get(currentLayer).get(selectedKey);
+
     }
 
     public int getCurrentLayer() {

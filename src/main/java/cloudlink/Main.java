@@ -1,8 +1,11 @@
 package cloudlink;
 
+import apple.laf.JRSUIUtils;
 import cloudlink.model.FileTree;
 import cloudlink.model.FinderItem;
+import cloudlink.utility.HTTPClient;
 import cloudlink.utility.JSONReader;
+import cloudlink.utility.JSONWriter;
 import cloudlink.utility.TreeBuilder;
 import cloudlink.view.LoginViewController;
 import cloudlink.view.MainViewController;
@@ -17,11 +20,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Main extends Application {
     private Stage primaryStage;
@@ -46,6 +51,7 @@ public class Main extends Application {
         }
         showLoginDialogue();
         getRemoteTree();
+        getLocalTree();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("CloudLink");
 
@@ -59,9 +65,14 @@ public class Main extends Application {
 //        primaryStage.setScene(new Scene(root, 300, 275));
 //        primaryStage.show();
     }
+    @Override
+    public void stop(){
+        //Any wrap up that needs doing, not required in this iteration
+    }
 
 
     public static void main(String[] args) {
+        //will be used in final version, not required during testing.
 //        FileCrawler fileCrawler = new FileCrawler(GlobalValues.basePath);
 //        List<HashMap<String,String>> oldFiles = new ArrayList<>();
 //        List<HashMap<String,String>> newFiles = fileCrawler.crawl(oldFiles);
@@ -80,12 +91,26 @@ public class Main extends Application {
     }
 
     public void getRemoteTree(){
-        TreeBuilder treeBuilder = new TreeBuilder(JSONReader.read());
+
+
+        TreeBuilder treeBuilder = new TreeBuilder(HTTPClient.getFilesData());
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //TreeBuilder treeBuilder = new TreeBuilder(JSONReader.read());
         treeBuilder.testConversion();
         treeBuilder.createFoldersList();
         remoteFiles = treeBuilder.buildTree();
         treeBuilder.printTree();
 
+    }
+    public void getLocalTree(){
+        TreeBuilder treeBuilder = new TreeBuilder(JSONReader.read());
+        treeBuilder.testConversion();
+        treeBuilder.createFoldersList();
+        localFiles = treeBuilder.buildTree();
     }
 
     public void initRootLayout(){
@@ -126,7 +151,9 @@ public class Main extends Application {
 
     public ObservableList<FinderItem> getRemoteFilesData(){
         ObservableList<FinderItem> observableList = FXCollections.observableArrayList();
+        System.out.println("getting levelled files");
         List<FinderItem> filesList = remoteFiles.getLevelledFiles();
+        System.out.println(filesList.size());
         for(FinderItem item : filesList){
             System.out.println(item.getName());
             observableList.add(item);
@@ -136,6 +163,10 @@ public class Main extends Application {
     }
     public ObservableList<FinderItem> getLocalFilesData(){
         ObservableList<FinderItem> observableList = FXCollections.observableArrayList();
+        List<FinderItem> filesList = localFiles.getLevelledFiles();
+        for(FinderItem item: filesList){
+            observableList.add(item);
+        }
         //Do similar logic to other section but with remote data.
         return observableList;
 

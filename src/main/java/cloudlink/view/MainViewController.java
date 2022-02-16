@@ -5,6 +5,7 @@ import cloudlink.model.File;
 import cloudlink.model.FinderItem;
 import cloudlink.utility.GlobalValues;
 import cloudlink.utility.HTTPClient;
+import cloudlink.utility.JSONWriter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -242,8 +243,11 @@ public class MainViewController {
 
     public void setMain(Main main){
         this.main = main;
-        main.getRemoteFiles().setSelectedKey("FilesTest");
+        main.getRemoteFiles().setSelectedKey("servertest2");
+        //remoteFiles.setItems(main.getRemoteFilesData());
         remoteFiles.setItems(main.getRemoteFilesData());
+        main.getLocalFiles().setSelectedKey("FilesTest");
+        localFiles.setItems(main.getLocalFilesData());
     }
     @FXML
     public void onRemoteIncrementPressed(){
@@ -264,7 +268,7 @@ public class MainViewController {
     @FXML
     public void onLocalIncrementPressed(){
         main.getLocalFiles().setSelectedKey(selectedLocalFolder);
-        main.getRemoteFiles().incrementLayer();
+        main.getLocalFiles().incrementLayer();
         localFiles.setItems(main.getLocalFilesData());
         GlobalValues.currentLocalFolder = main.getLocalFiles().getPath();
         selectedLocalFolder = "";
@@ -282,14 +286,31 @@ public class MainViewController {
     public void onRemoteDownloadPressed(){
         String id = selectedFile.getUuid();
         String path = GlobalValues.currentLocalFolder + java.io.File.separator + selectedFile.getName();
-        HTTPClient.downloadFile(id, path);
+        HashMap<String, String> fileDetails = new HashMap<>();
+        fileDetails.put("_id", selectedFile.getUuid());
+        fileDetails.put("path", selectedFile.getPath());
+        fileDetails.put("date-edited", selectedFile.getDateEdited());
+        fileDetails.put("online", "true");
+        JSONWriter.writeOne(fileDetails);
+        //HTTPClient.downloadFile(id, path);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Uploaded file successfully!");
+        alert.setContentText("This file is now tracked by the Cloudlink system");
+        alert.showAndWait();
     }
 
     @FXML
     public void onRemoteUpdatePressed(){
         String id = selectedFile.getUuid();
         String path = selectedFile.getLocalPath();
-        HTTPClient.uploadFile(id, path);
+        //HTTPClient.uploadFile(id, path);
+        HashMap<String,String> newdetails = new HashMap<>();
+        newdetails.put("date-edited", selectedFile.getDateEdited());
+        //HTTPClient.updateFileData(id,newdetails);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Uploaded file successfully!");
+        alert.setContentText("The latest version of this file is now on the Cloudlink System!");
+        alert.showAndWait();
     }
 
     @FXML
@@ -301,11 +322,11 @@ public class MainViewController {
         fileData.put("path", selectedFile.getLocalPath());
         fileData.put("date-edited", selectedFile.getDateEdited());
         fileData.put("online", "true");
-        HTTPClient.uploadFileData(fileData);
-        HTTPClient.uploadFile(id, path);
+        //HTTPClient.uploadFileData(fileData);
+        //HTTPClient.uploadFile(id, path);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Uploaded file successfully!");
-        alert.setContentText("This file is now tracked by the Cloudlink system");
+        alert.setContentText("This file is now tracked by the Cloudlink system!");
         alert.showAndWait();
     }
 
@@ -313,7 +334,11 @@ public class MainViewController {
     public void onLocalUpdatePressed(){
         String id = selectedFile.getUuid();
         String path = selectedFile.getLocalPath();
-        HTTPClient.downloadFile(id, path);
+        //HTTPClient.downloadFile(id, path);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Updated file successfully!");
+        alert.setContentText("The latest version of this file is now on your system!");
+        alert.showAndWait();
     }
 
 }

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.signalr.HubConnection;
 import com.microsoft.signalr.HubConnectionBuilder;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -15,7 +16,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -31,7 +34,8 @@ public interface HTTPClient {
             try {
                 System.out.println("Upload File Data: Attempting");
                 //Create URL for the correct endpoint
-                URL url = new URL("https://cloudlink.azurewebsites.net/api/addfile");
+                URL url = new URL("http://192.168.1.163:5000/cloudlink/addfile/");
+                //URL url = new URL("https://cloudlink.azurewebsites.net/api/addfile");
                 //open and set up connection
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
@@ -114,7 +118,8 @@ public interface HTTPClient {
 
      static Boolean deleteFileData(String id) {
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
-            String baseURL = "https://cloudlink.azurewebsites.net/api/delete-item?_id=";
+            //String baseURL = "https://cloudlink.azurewebsites.net/api/delete-item?_id=";
+            String baseURL = "http://192.168.1.163:5000/cloudlink/deletefile?id=";
             String requestURL = baseURL + id;
             try {
                 URL url = new URL(requestURL);
@@ -123,11 +128,11 @@ public interface HTTPClient {
                 connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 connection.setRequestProperty("Accept", "application/json");
                 connection.setDoOutput(true);
-                JSONObject body = new JSONObject();
-                body.put("_id", id);
-                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-                dataOutputStream.write(body.toString().getBytes());
-                dataOutputStream.close();
+//                JSONObject body = new JSONObject();
+//                body.put("_id", id);
+//                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
+//                dataOutputStream.write(body.toString().getBytes());
+//                dataOutputStream.close();
                 connection.disconnect();
                 if (connection.getResponseCode() == 404) {
                     System.out.println("error");
@@ -157,18 +162,19 @@ public interface HTTPClient {
      static HashMap<String, String> getFileData(String id){
         CompletableFuture<HashMap<String, String>> completableFuture = CompletableFuture.supplyAsync(()->{
             try {
-                URL url = new URL("https://cloudlink.azurewebsites.net/api/get-single-file-data?");
+                //URL url = new URL("https://cloudlink.azurewebsites.net/api/get-single-file-data?");
+                URL url = new URL("http://192.168.1.163:5000/cloudlink/file?fileid="+id);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 connection.setRequestProperty("Accept", "application/json");
                 connection.setDoOutput(true);
-                JSONObject body = new JSONObject();
-                body.put("_userid", GlobalValues.userid);
-                body.put("_id", id);
-                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-                dataOutputStream.write(body.toString().getBytes());
-                dataOutputStream.close();
+//                JSONObject body = new JSONObject();
+//                body.put("_userid", GlobalValues.userid);
+//                body.put("_id", id);
+//                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
+//                dataOutputStream.write(body.toString().getBytes());
+//                dataOutputStream.close();
                 InputStream in = connection.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                 StringBuffer buf = new StringBuffer();
@@ -200,9 +206,10 @@ public interface HTTPClient {
 
     }
 //Get complete list, may need to be used in server program too.
-    static JSONObject getFilesData(){
-        CompletableFuture<JSONObject> completableFuture = CompletableFuture.supplyAsync(()->{
+    static List<HashMap<String,String>> getFilesData(){
+        CompletableFuture<List<HashMap<String,String>>> completableFuture = CompletableFuture.supplyAsync(()->{
             try{
+                List<HashMap<String, String>> readFilesData = new ArrayList<HashMap<String, String>>();
                 URL url = new URL("http://192.168.1.163:5000/cloudlink/files?userid=" + GlobalValues.userid);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
@@ -216,9 +223,15 @@ public interface HTTPClient {
                     buf.append(line);
                 }
                 String jsonText = buf.toString();
+                System.out.println(jsonText);
                 JSONParser parser = new JSONParser();
-                JSONObject obj = (JSONObject) parser.parse(jsonText);
-                return obj;
+                Object obj = parser.parse(jsonText);
+                JSONArray fileList = (JSONArray) obj;
+                fileList.forEach(fileData -> {
+                    readFilesData.add(parseFileData((JSONObject) fileData));
+
+                });
+                return readFilesData;
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -318,6 +331,19 @@ public interface HTTPClient {
         }catch (Exception e){
             return false;
         }
+    }
+    static HashMap<String, String> parseFileData(JSONObject fileData){
+        HashMap<String, String> fileDataMap = new HashMap<String, String>();
+        System.out.println(fileData.get("_id"));
+        fileDataMap.put("_id", (String) fileData.get("_id"));
+        fileDataMap.put("path", (String) fileData.get("path"));
+        fileDataMap.put("date-edited", (String) fileData.get("date-edited"));
+        fileDataMap.put("online", (String) fileData.get("online"));
+        GlobalValues.trackedFiles.add(fileDataMap);
+        GlobalValues.trackedUUIDS.add((String) fileData.get("_id"));
+        GlobalValues.trackedPaths.add((String) fileData.get("path"));
+         return fileDataMap;
+
     }
 
 
