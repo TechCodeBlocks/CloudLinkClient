@@ -2,11 +2,13 @@ package cloudlink.model;
 
 import cloudlink.utility.GlobalValues;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Custom Tree implementation, using a multi dimensional array/hashmap as an underlying data structure.
+ */
 public class FileTree {
     HashMap<Integer, HashMap<String, List<FinderItem>>> tree;
     private int currentLayer;
@@ -47,6 +49,11 @@ public class FileTree {
         return tree;
     }
 
+    /**
+     * @param uuid
+     * @return
+     * Returns a file using UUID as key
+     */
     public FinderItem getFile(String uuid){
         for(Integer key1 :tree.keySet() ){
 
@@ -66,6 +73,11 @@ public class FileTree {
         }
         return null;
     }
+
+    /**
+     * @return
+     * Provides a full path to the currently selected path within the tree
+     */
     public String getPath(){
         String completePath = "";
         for(String comp : currentPath){
@@ -75,12 +87,21 @@ public class FileTree {
 
     }
 
+    /**
+     * Contains some logging.
+     * Moves one layer deeper into the tree
+     */
     public void incrementLayer(){
         System.out.println("Incrementing");
         System.out.println(selectedKey);
         currentLayer++;
         System.out.println(currentLayer);
     }
+
+    /**
+     * Contains some logging.
+     * Moves one layer up the tree
+     */
     public void decrementLayer(){
         System.out.println("decrementing");
         System.out.println(currentPath);
@@ -89,11 +110,19 @@ public class FileTree {
         selectedKey = currentPath.get(currentPath.size()-1);
     }
 
+    /**
+     * @param selectedKey
+     * Updates the selectedKey -> representative of the desired parent folder.
+     */
     public void setSelectedKey(String selectedKey){
         this.selectedKey = selectedKey;
         currentPath.add(selectedKey);
     }
 
+    /**
+     * @return
+     * Returns a list of finder items that are at the selected level and share the same immediate parent key,
+     */
     public List<FinderItem> getLevelledFiles(){
 
             return tree.get(currentLayer).get(selectedKey);

@@ -4,7 +4,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+/**
+ * Class purely for statically storing values that are used around the program.
+ */
 public class GlobalValues {
     public static String userid = "101";
     public static String basePath = "/Users/benjaminsolomons/Documents/FilesTest";

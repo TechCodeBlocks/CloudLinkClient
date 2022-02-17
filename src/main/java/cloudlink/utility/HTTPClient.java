@@ -25,9 +25,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public interface HTTPClient {
-    //Functions needed:
-    //Upload file data: json format from HashMap, post request to the correct endpoint
-    //Delete file data: send request with the id of the file to delete as a paramater called _id
+    /**
+     * @param fileData HashMap of strings corresponding to the data for one file
+     * @return Boolean confirmation of operation success/failure.
+     * Sends a POST request to the Cloud Bridge, sending data in the JSON body of the request so that it can be processed on the server.
+     * Operates asynchronously.
+     */
     static Boolean uploadFileData(HashMap<String, String> fileData) {
         //Async execution of code
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
@@ -81,6 +84,14 @@ public interface HTTPClient {
         }
         return false;
     }
+
+    /**
+     * @param id
+     * @param updateParameters
+     * @return
+     *
+     * Updates the properties of a file already tracked by the cloud system. Uses the UUID and a HashMap of properties to update.
+     */
     //Use to mark files as online when they are uploaded.
     static Boolean updateFileData(String id, HashMap<String, String> updateParameters ){
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(()->{
@@ -115,6 +126,11 @@ public interface HTTPClient {
         return false;
 
     }
+    /**
+     * @param id UUID of file that is to be deleted
+     * @return Boolean indicating success/failure of the operation.
+     * Asynchronous HTTP DELETE request to the Cloud Bridge to remove a file that no longer exists on the server.
+     */
 
      static Boolean deleteFileData(String id) {
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
@@ -158,7 +174,11 @@ public interface HTTPClient {
         }
         return false;
     }
-
+    /**
+     * @param id UUID of file for which data is being requested.
+     * @return Boolean indicating success/failure of the operation.
+     * Asynchronous HTTP GET request to obtain file data for a file that has been uploaded by a client program.
+     */
      static HashMap<String, String> getFileData(String id){
         CompletableFuture<HashMap<String, String>> completableFuture = CompletableFuture.supplyAsync(()->{
             try {
@@ -205,7 +225,14 @@ public interface HTTPClient {
         return new HashMap<String,String>();
 
     }
-//Get complete list, may need to be used in server program too.
+
+    /**
+     * @return
+     * Obtains a complete list of all file data linked to the signed in user.
+     * Runs as an asynchronous HTTP GET request.
+     * Returns as a list of file data, to be used by the rest of the program.
+     */
+
     static List<HashMap<String,String>> getFilesData(){
         CompletableFuture<List<HashMap<String,String>>> completableFuture = CompletableFuture.supplyAsync(()->{
             try{
@@ -248,7 +275,12 @@ public interface HTTPClient {
         return null;
     }
 
-
+    /**
+     * @param id
+     * @param path
+     * @return Boolean indicating success/failure of the operation.
+     * Uses the Azure Blob API to upload a file to the Cloud Bridge asynchronously, so that it can be downloaded by a client.
+     */
     static Boolean uploadFile(String id, String path) {
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
             String filepath = path;
@@ -273,18 +305,21 @@ public interface HTTPClient {
         return false;
 
     }
-    //Will need to run a get request to get file data before running this function. Should be added to the cloud database before it can be downloaded
+    /**
+     * @param fileID
+     * @param path
+     * @return Boolean indicating success/failure of the operation.
+     * Uses the Azure Blob API to upload a file to the Cloud Bridge asynchronously.
+     * Will be used whenever a new file is uploaded by a client.
+     */
     static Boolean downloadFile(String fileID, String path) {
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() -> {
 
-            //File downloadedFile = new File(fileData.get("path"));
-            //File downloadedFile = new File("/Users/sandrarolfe/Documents/servertest/DownloadTest.rtf");
             String connectStr = "DefaultEndpointsProtocol=https;AccountName=cloudlinkfilestore;AccountKey=c2CcTbSpewXh4jU85enZGpHYyiq2elYAUnVpKJLxIotTZWRoBFiQwcoj5kvaB4C6quaQ7KkifiJFdKXHGOPdWg==;EndpointSuffix=core.windows.net";
             BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().connectionString(connectStr).buildClient();
             BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient("ytterbium");
             BlobClient blobClient = blobContainerClient.getBlobClient(fileID);
             blobClient.downloadToFile(path);
-            //blobClient.downloadToFile("/Users/sandrarolfe/Documents/servertest/DownloadTest.rtf");
             return true;
         });
         try {
@@ -297,7 +332,14 @@ public interface HTTPClient {
         return false;
 
     }
-    //not required in server program, will be used in http client for clients.
+
+    /**
+     * @param id
+     * @param passwordHash
+     * @return
+     * Provides a boolean response based on server repsonse to a GET request providing username and password.
+     *
+     */
     static Boolean verifyUser(String id, String passwordHash){
         CompletableFuture<Boolean> completableFuture = CompletableFuture.supplyAsync(() ->{
             try {
@@ -332,6 +374,13 @@ public interface HTTPClient {
             return false;
         }
     }
+
+    /**
+     * @param fileData
+     * @return
+     * For use with the getFilesData function. Same as is used as a helper function in the JSONReader.
+     * As file is tracked, it is added to the list of tracked files.
+     */
     static HashMap<String, String> parseFileData(JSONObject fileData){
         HashMap<String, String> fileDataMap = new HashMap<String, String>();
         System.out.println(fileData.get("_id"));

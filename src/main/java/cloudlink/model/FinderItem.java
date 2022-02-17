@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Base class for Files and Folders.
+ * Has all essential information that is shared by both.
+ */
 public class FinderItem {
     private String path;
     private List<String> parents;

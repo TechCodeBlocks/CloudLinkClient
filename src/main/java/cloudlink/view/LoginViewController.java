@@ -29,6 +29,9 @@ public class LoginViewController {
         this.dialogStage = dialogStage;
     }
 
+    /**
+     * JavaFX event listener for button press, no great complexity.
+     */
     @FXML
     private void handleLoginPressed(){
         if(isInputValid()){
@@ -51,6 +54,12 @@ public class LoginViewController {
 
     }
 
+    /**
+     * @return
+     * Validates user input. User IDs must be numeric and be more than 3 digits.
+     * Passwords must be at least 5 characters and contain both uppercase, lowercase and numeric characters.
+     * Returns a boolean for whether these verifications are passed.
+     */
     private boolean isInputValid() {
         if (userIDField.getText().length() < 3) {
             return false;
@@ -98,8 +107,14 @@ public class LoginViewController {
         }
         return false;
     }
+
+    /**
+     * @return
+     * Checks user details against those which are stored in the cloud.
+     * Only if user details are correct, will return true.
+     * Designed such that hashing can be used in the future.
+     */
     private boolean isUserValid(){
-        //Use string.hashcode() to get password hash to use. This will be implemented later.
         return HTTPClient.verifyUser(userIDField.getText(), passwordField.getText());
     }
 

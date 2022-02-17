@@ -4,7 +4,6 @@ import cloudlink.Main;
 import cloudlink.model.File;
 import cloudlink.model.FinderItem;
 import cloudlink.utility.GlobalValues;
-import cloudlink.utility.HTTPClient;
 import cloudlink.utility.JSONWriter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -82,6 +81,12 @@ public class MainViewController {
     String selectedLocalFolder;
     File selectedFile;
 
+    /**
+     * JavaFX boilerplate to set up the view.
+     * Establishes data profiles for the table of files for both the local and the remote lists.
+     * Initialises other values with empty contents.
+     * Establishes the selection model: what happens when a table row is selected (ie a file is selected)
+     */
     @FXML
     private void initialize(){
         remoteFilesFname.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -165,6 +170,11 @@ public class MainViewController {
     }
 
 
+    /**
+     * @param file File that is selected.
+     * Sets values in the right hand side details pane to provide the user with more in depth information about the file.
+     * Handles details for remote file data.
+     */
     private void showRemoteFileDetails(File file){
         if(file != null){
             selectedFile = file;
@@ -180,7 +190,7 @@ public class MainViewController {
                     remoteFileUpdateBtn.setDisable(true);
                     remoteFileDownloadBtn.setDisable(true);
                     break;
-                case NOT_TRAKCED:
+                case NOT_TRACKED:
                     remoteFileSync.setText("Not tracked");
                     remoteFileUpdateBtn.setDisable(true);
                     remoteFileDownloadBtn.setDisable(false);
@@ -202,6 +212,11 @@ public class MainViewController {
         }
 
     }
+    /**
+     * @param file File that is selected.
+     * Sets values in the right hand side details pane to provide the user with more in depth information about the file.
+     * Handles details for local file data.
+     */
 
     private void showLocalFileDetails(File file){
         if(file != null){
@@ -218,7 +233,7 @@ public class MainViewController {
                     localFileUpdateBtn.setDisable(true);
                     localFileUploadBtn.setDisable(true);
                     break;
-                case NOT_TRAKCED:
+                case NOT_TRACKED:
                     localFileSync.setText("Not tracked");
                     localFileUpdateBtn.setDisable(true);
                     localFileUploadBtn.setDisable(false);
@@ -241,14 +256,24 @@ public class MainViewController {
 
     }
 
+    /**
+     * @param main
+     * Use data stored in the main class (file trees) to initialise file explorers
+     * Selected key is used to establish the entry point for the program into the file structure.
+     */
     public void setMain(Main main){
         this.main = main;
         main.getRemoteFiles().setSelectedKey("servertest2");
-        //remoteFiles.setItems(main.getRemoteFilesData());
         remoteFiles.setItems(main.getRemoteFilesData());
         main.getLocalFiles().setSelectedKey("FilesTest");
         localFiles.setItems(main.getLocalFilesData());
     }
+
+    /**
+     * Move down a layer in the file tree.
+     * Changes the directory used as parent to the one that has been selected.
+     * Refreshes contents of table.
+     */
     @FXML
     public void onRemoteIncrementPressed(){
         main.getRemoteFiles().setSelectedKey(selectedRemoteFolder);
@@ -257,6 +282,10 @@ public class MainViewController {
         GlobalValues.currentRemoteFolder = main.getRemoteFiles().getPath();
         selectedRemoteFolder ="";
     }
+
+    /**
+     * Moves up a layer in the file tree and refreshes the table contents.
+     */
     @FXML
     public void onRemoteDecrementPressed(){
         if(main.getRemoteFiles().getCurrentLayer() != main.getRemoteFiles().getBaseLayer()) {
@@ -265,6 +294,10 @@ public class MainViewController {
             GlobalValues.currentRemoteFolder = main.getRemoteFiles().getPath();
         }
     }
+
+    /**
+     * Ditto, but for the local file tree.
+     */
     @FXML
     public void onLocalIncrementPressed(){
         main.getLocalFiles().setSelectedKey(selectedLocalFolder);
@@ -274,6 +307,9 @@ public class MainViewController {
         selectedLocalFolder = "";
     }
 
+    /**
+     * Ditto, but for the local file tree.
+     */
     @FXML void onLocalDecrementPressed(){
         if(main.getLocalFiles().getCurrentLayer() != main.getLocalFiles().getBaseLayer()){
             main.getLocalFiles().decrementLayer();
@@ -282,6 +318,12 @@ public class MainViewController {
         }
     }
 
+    /**
+     * Download a file to the client device. File will be stored in the current directory open in the local tab.
+     * Stores file data in persistent storage (changes not currently synchronised instantaneously.
+     * Uses Azure Blob API to download file.
+     * Notifies user.
+     */
     @FXML
     public void onRemoteDownloadPressed(){
         String id = selectedFile.getUuid();
@@ -299,6 +341,11 @@ public class MainViewController {
         alert.showAndWait();
     }
 
+    /**
+     * File is already tracked, but remote version is identified as outdated.
+     * To update the file: upload the local copy, and update the date edited property stored in the cloud.
+     * Notifies user.
+     */
     @FXML
     public void onRemoteUpdatePressed(){
         String id = selectedFile.getUuid();
@@ -313,6 +360,11 @@ public class MainViewController {
         alert.showAndWait();
     }
 
+    /**
+     * Gets data for the selected file, uploads the file data to the cloud database and then uploads a copy of the file
+     * to the Azure blob system.
+     * Notifies user.
+     */
     @FXML
     public void onLocalUploadPressed(){
         String id = selectedFile.getUuid();
@@ -330,6 +382,10 @@ public class MainViewController {
         alert.showAndWait();
     }
 
+    /**
+     * Local file is outdated, up to date version needs to be downloaded from the cloud system.
+     * Notifies user.
+     */
     @FXML
     public void onLocalUpdatePressed(){
         String id = selectedFile.getUuid();

@@ -14,7 +14,10 @@ public class FileCrawler {
     public FileCrawler(String baseFilePath){
         this.baseFilePath = baseFilePath;
     }
-
+    /**
+     * Public access point to recursive function
+     * @return List of HashMaps that constitute a complete list of files data.
+     */
     public List<HashMap<String,String>> crawl(){
         existingFilePaths = getPathsFromList(GlobalValues.trackedFiles);
         //recursively traverse file structure and build up a list of files. if there is a new path create a
@@ -26,6 +29,12 @@ public class FileCrawler {
 
         return preexistingFiles;
     }
+    /**
+     * @param knownPaths List of known paths (to avoid conflict)
+     * @param directory Current directory that is to be crawled.
+     * @return List of new files found in the directory
+     * Recursively indexes the file tree.
+     */
     private List<HashMap<String,String>> crawler(List<String> knownPaths, File directory){
         File[] files = directory.listFiles();
         List<HashMap<String,String>> newFileList = new ArrayList<>();
@@ -55,7 +64,10 @@ public class FileCrawler {
 
     }
 
-
+    /**
+     * @param existingFiles Full file data
+     * @return Abstracted file data, only containing paths as this is all that is required by the crawler.
+     */
 
     private List<String> getPathsFromList(List<HashMap<String, String>> existingFiles) {
         List<String> paths = new ArrayList<String>();
@@ -68,6 +80,10 @@ public class FileCrawler {
         return paths;
     }
 
+    /**
+     * Retained for now after port from server. Not currently in use, but may be used in a later non-proof-of-concept
+     * implementation. For demonstrative purposes it is surplus to requirement.
+     */
     private void checkIfFilesExistStill(){
         List<HashMap<String, String>> filesToRemove = new ArrayList<HashMap<String, String>>();
         for(HashMap<String,String> filesData : preexistingFiles){

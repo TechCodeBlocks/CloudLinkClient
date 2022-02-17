@@ -3,21 +3,21 @@ package cloudlink.utility;
 import cloudlink.model.File;
 import cloudlink.model.FileTree;
 import cloudlink.model.FinderItem;
-import cloudlink.model.Sychnronosity;
+import cloudlink.model.Synchronicity;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public interface FileDataHandler {
 
-    //Store a JSON list of only files that are to be tracked on the client device. These UUIDs will be kept the same, everything else will be refreshed when program is restarted.
-    //Add uuid to this list  when a file is downloaded.
 
-    //Parse the UUID/paths to the crawler on start.
-    //Once all data is present, check the uuids present in both file trees and carry out the necessary logic to mark things
-    //with correct synchronosity.
-    //Only adds tracking info to the remote files tree. May be beneficial to add it to local file tracking too.
-
+    /**
+     * @param local
+     * @param remote
+     * Provides synchronicity information for all files that are tracked in the system.
+     * Tracking in the proof of concept is only added to the remote files tree. Full (non PoC) implementations
+     * could add it to both trees.
+     */
     static void insertTracking(FileTree local, FileTree remote){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
         for(Integer key1 :remote.getTree().keySet()){
@@ -31,12 +31,12 @@ public interface FileDataHandler {
                             LocalDate dateLocal = LocalDate.parse(((File)local.getFile(uuid)).getDateEdited(), formatter);
                             LocalDate dateRemote = LocalDate.parse(((File) item).getDateEdited(), formatter);
                             if(dateLocal.isAfter(dateRemote)){
-                                ((File)item).setStatus(Sychnronosity.OUTDATED);
+                                ((File)item).setStatus(Synchronicity.OUTDATED);
                             }else if(dateRemote.isAfter(dateLocal)){
-                                ((File)local.getFile(uuid)).setStatus(Sychnronosity.OUTDATED);
+                                ((File)local.getFile(uuid)).setStatus(Synchronicity.OUTDATED);
                             }else{
-                                ((File)item).setStatus(Sychnronosity.UP_TO_DATE);
-                                ((File)local.getFile(uuid)).setStatus(Sychnronosity.UP_TO_DATE);
+                                ((File)item).setStatus(Synchronicity.UP_TO_DATE);
+                                ((File)local.getFile(uuid)).setStatus(Synchronicity.UP_TO_DATE);
                             }
 
                         }

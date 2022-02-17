@@ -4,11 +4,7 @@ import cloudlink.model.File;
 import cloudlink.model.FileTree;
 import cloudlink.model.FinderItem;
 import cloudlink.model.Folder;
-import com.fasterxml.jackson.databind.util.TypeKey;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,6 +21,10 @@ public class TreeBuilder {
     }
 
 
+    /**
+     * For each HashMap of strings that corresponds to a file, a custom object of type File (cloudlink not java)
+     * will be created and added to a list.
+     */
     private void convertListToObjects(){
         for(HashMap<String,String> data : filesData){
             String id = data.get("_id");
@@ -40,6 +40,10 @@ public class TreeBuilder {
         }
     }
 
+    /**
+     * Provides some degree of logging.
+     * Acts as the public access point to convert a file data list to a list of files.
+     */
     public void testConversion(){
         convertListToObjects();
         for(File file : filesList){
@@ -52,10 +56,11 @@ public class TreeBuilder {
         }
     }
 
-    private void sortFiles(){
-        Collections.sort(filesList, new FinderItemComparator());
-    }
 
+    /**
+     * Creates a list of folders. Not stored in FileData so has to be recreated from paths.
+     * Folders a required for user interface purposes.
+     */
     public void createFoldersList(){
         ArrayList<String> seenFolders = new ArrayList<>();
         for(File file : filesList){
@@ -77,6 +82,19 @@ public class TreeBuilder {
 
     }
 
+    /**
+     * @return
+     * Returns a FileTree object.
+     * Tree constructed as a map of depths and parent folders to allow logical keying.
+     * Folders and Files added separately as they are stored this way.
+     * Logic explained below:
+     *
+     * Do in layers by length of parents, group by lengths to have depth into 'tree' - 3 dimensional data structure
+     * Then to traverse, go by depth into tree and extract by checking preceding parent item for if it matches the
+     * selected file. Would need to store direct parent as a distinct string.
+     * File tree will be the depth map
+     * {depth:{preceding:{},preceding:{}, depth....}
+     */
     public FileTree buildTree(){
         ArrayList<String> seenFolders = new ArrayList<>();
        // sortFiles();
@@ -117,6 +135,10 @@ public class TreeBuilder {
 
 
     }
+
+    /**
+     * Traverses all of tree and displays it as it is stored. Used for logging purposes.
+     */
     public void printTree(){
         for(Integer key1 :tree.keySet() ){
             System.out.println(key1 + " {");
